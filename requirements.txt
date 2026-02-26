@@ -1,0 +1,16 @@
+Flask>=2.3.0
+APScheduler>=3.10.0
+Gunicorn>=21.0.0
+python-dotenv>=1.0.0
+
+# Optional: AWS S3 cloud storage support
+# Uncomment the lines below if you want to use S3 for image storage
+# boto3>=1.26.0
+# botocore>=1.29.0
+
+# Optional: Google Cloud Storage support
+# google-cloud-storage>=2.10.0
+
+# Optional: Azure Blob Storage support
+# azure-storage-blob>=12.14.0
+

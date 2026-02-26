@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; gap: 16px; flex-wrap: wrap;">
+        <h2 style="margin: 0;">🔐 Admin Dashboard</h2>
+        <form method="post" action="{{ url_for('admin_logout') }}">
+            <button type="submit" class="btn-secondary">Log out</button>
+        </form>
+    </div>
+
+    {% if items %}
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="color: var(--accent);">ID</th>
+                        <th>Image</th>
+                        <th>Type</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Location</th>
+                        <th>Contact</th>
+                        <th>Status</th>
+                        <th>Approved</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                        <tr>
+                            <td style="font-weight: 700; color: var(--accent);">#{{ item.id }}</td>
+                            <td>
+                                {% if item['image'] %}
+                                    <img src="{{ url_for('static', filename=item['image']) }}" 
+                                         alt="{{ item.name }}" 
+                                         class="admin-thumb">
+                                {% else %}
+                                    <span style="color: var(--text-light);">—</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="item-type">{{ item.type }}</span>
+                            </td>
+                            <td><strong style="color: var(--text-anchor);">{{ item.name }}</strong></td>
+                            <td style="font-size: 0.8rem; color: var(--text-muted);">{{ item.description[:40] }}{% if item.description|length > 40 %}...{% endif %}</td>
+                            <td><small>{{ item.location }}</small></td>
+                            <td><small style="color: var(--accent); font-weight: 600;">{{ item.contact }}</small></td>
+                            <td>
+                                <span style="text-transform: capitalize; font-weight: 600; color: {% if item.status == 'returned' %}var(--text-light){% else %}var(--accent){% endif %}">
+                                    {{ item.status }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if item.approved %}
+                                    <span style="color: var(--success); font-weight: 700;">✓ Yes</span>
+                                {% else %}
+                                    <span style="color: var(--text-light); font-weight: 600;">No</span>
+                                {% endif %}
+                            </td>
+                            <td class="actions">
+                                {% if not item.approved %}
+                                    <form method="post" action="{{ url_for('approve_item', item_id=item.id) }}" style="display: inline;">
+                                        <button type="submit" class="btn-primary" style="padding: 6px 12px; font-size: 0.75rem; width: auto;">Approve</button>
+                                    </form>
+                                {% endif %}
+                                {% if item.status != "returned" %}
+                                    <form method="post" action="{{ url_for('return_item', item_id=item.id) }}" style="display: inline;">
+                                        <button type="submit" class="btn-danger" style="padding: 6px 12px; font-size: 0.75rem; width: auto;">Mark Returned</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <p style="margin-top: 16px; color: var(--text-muted); font-size: 0.875rem;">
+            Total items: <strong style="color: var(--text-anchor);">{{ items|length }}</strong>
+        </p>
+    {% else %}
+        <div style="background: var(--accent-light); border-left: 4px solid var(--accent); padding: 20px; border-radius: var(--radius-lg); margin-top: 24px;">
+            <p style="margin: 0; color: var(--text-anchor); font-weight: 600;">No items have been reported yet.</p>
+            <p style="margin: 4px 0 0 0; color: var(--text-muted); font-size: 0.9rem;">Items will appear here once users submit reports.</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
+
