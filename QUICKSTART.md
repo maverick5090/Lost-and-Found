@@ -102,7 +102,7 @@ Set `FLASK_ENV=production` before deploying to a server.
 
 **Admin login not working?**
 - Navigate to http://localhost:5000/admin/login
-- Default password: `admin123` (change in production!)
+- Default password: `` (change in production!)
 
 **Port 5000 already in use?**
 - Change in `.env`: `PORT=8000`
