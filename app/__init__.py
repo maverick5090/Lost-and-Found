@@ -3,7 +3,6 @@ import logging
 from flask import Flask
 from .config import Config
 from .db import init_db
-from apscheduler.schedulers.background import BackgroundScheduler
 
 # load logging configuration
 logging.basicConfig(
@@ -27,10 +26,9 @@ def create_app():
 
     app.register_blueprint(routes.bp)
 
-    # initialize database and scheduler
+    # initialize database
     with app.app_context():
         init_db()
-        _init_scheduler(app)
 
     return app
 
@@ -40,22 +38,5 @@ def create_app():
 app = create_app()
 
 
-def _init_scheduler(app):
-    """Internal helper to start the background cleanup job."""
-    # import routes here to avoid circular import at module load time
-    from . import routes
-
-    try:
-        scheduler = BackgroundScheduler()
-        scheduler.add_job(
-            func=routes.cleanup_old_images,
-            trigger="interval",
-            hours=1,
-            id="cleanup_images",
-        )
-        scheduler.start()
-        logger.info("Background scheduler started successfully")
-        return scheduler
-    except Exception as e:
-        logger.error(f"Failed to start scheduler: {str(e)}")
-        return None
+# scheduler support removed to avoid startup NameError on import
+# the background job is no longer started during app creation.
