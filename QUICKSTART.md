@@ -22,7 +22,7 @@ echo "ADMIN_PASSWORD=admin123" >> .env
 
 ### 4. Run Development Server
 ```bash
-python app.py
+python run.py
 ```
 
 Server will start at `http://localhost:5000`
@@ -40,7 +40,7 @@ For production deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md)
 
 **Quick command:**
 ```bash
-gunicorn --workers 4 --bind 0.0.0.0:5000 app:app
+goricorn --workers 4 --bind 0.0.0.0:5000 run:app
 ```
 
 ---
@@ -59,24 +59,20 @@ gunicorn --workers 4 --bind 0.0.0.0:5000 app:app
 ## File Structure
 
 ```
-lost-and-found/
-├── app.py                 # Main Flask application
-├── requirements.txt       # Python dependencies
-├── DEPLOYMENT.md         # Production deployment guide
-├── .env.example          # Environment variables template
-├── .gitignore            # Git ignore rules
-│
-├── static/
-│   ├── styles.css        # CSS styling
-│   ├── main.js           # JavaScript utilities
-│   └── uploads/          # Uploaded images (auto-generated)
-│
-└── templates/
-    ├── base.html         # Base template
-    ├── index.html        # Home page
-    ├── report.html       # Report item form
-    ├── admin_login.html  # Admin login
-    └── admin.html        # Admin dashboard
+Lost-and-Found/
+├── app/
+│   ├── __init__.py          # create_app() factory
+│   ├── routes.py            # all Flask routes
+│   ├── db.py                # SQLite helper
+│   ├── models.py            # data access functions
+│   ├── config.py            # environment config
+│   ├── templates/           # Jinja HTML files
+│   └── static/              # CSS, JS, images (includes uploads)
+├── database.db              # SQLite database (auto-generated)
+├── run.py                   # WSGI entry point (exports `app`)
+├── requirements.txt
+├── README.md
+└── .gitignore
 ```
 
 ---

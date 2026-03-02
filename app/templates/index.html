@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section>
+    <h2>✨ Recently Found Items</h2>
+    {% if items %}
+        <div class="cards">
+            {% for item in items %}
+                <article class="card {% if item.status == 'returned' %}card-returned{% endif %}">
+                    {% if item['image'] %}
+                        <img src="{{ url_for('static', filename=item['image']) }}" 
+                             alt="{{ item.name }}" 
+                             class="card-img">
+                    {% endif %}
+                    <span class="item-type">{{ item.type|capitalize }}</span>
+                    <h3>{{ item.name }}</h3>
+                    <p><strong>📍 Found at:</strong> {{ item.location }}</p>
+                    <p style="color: var(--text-muted);">{{ item.description }}</p>
+                    <p style="margin-top: 12px; border-top: 1px solid var(--border-light); padding-top: 12px;">
+                        <strong style="color: var(--text-anchor);">📞 Contact:</strong> 
+                        <a href="tel:{{ item.contact }}" style="color: var(--accent); text-decoration: none; font-weight: 600;">{{ item.contact }}</a>
+                    </p>
+                    {% if item.status == 'returned' %}
+                        <div style="margin-top: 12px; padding: 12px; background: var(--accent-light); border-radius: var(--radius-md); text-align: center; color: var(--text-anchor); font-weight: 600;">✓ Returned</div>
+                    {% endif %}
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p style="font-size: 1.125rem; color: var(--text-anchor); font-weight: 600;">No found items yet</p>
+            <p>Check back soon or <a href="{{ url_for('main.report') }}" style="color: var(--accent); font-weight: 600; text-decoration: none;">report an item</a> you found.</p>
+        </div>
+    {% endif %}
+</section>
+
+<section class="info-section">
+    <h2>📋 How Campus Lost & Found Works</h2>
+    <ol style="color: var(--text-default); padding-left: 24px;">
+        <li style="margin-bottom: 12px;"><strong style="color: var(--text-anchor);">Lost something?</strong> Use the "Report Item" section to log items you've lost.</li>
+        <li style="margin-bottom: 12px;"><strong style="color: var(--text-anchor);">Found something?</strong> Report it and our admins will verify and post it here for others to find.</li>
+        <li><strong style="color: var(--text-anchor);">Found your item?</strong> Contact the person using the provided contact information.</li>
+    </ol>
+</section>
+{% endblock %}
+

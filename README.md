@@ -25,15 +25,18 @@ It uses:
 pip install -r requirements.txt
 ```
 
-3. Run the app:
+3. Start the server:
 
 ```bash
-python app.py
+# development
+python run.py
+# or with gunicorn (recommended for production)
+gunicorn run:app
 ```
 
-4. Open the app in your browser:
+4. Browse the site:
 
-- Main site: `http://127.0.0.1:5000/`
+- Main page: `http://127.0.0.1:5000/`
 - Admin dashboard: `http://127.0.0.1:5000/admin`
 
 ## API Endpoints

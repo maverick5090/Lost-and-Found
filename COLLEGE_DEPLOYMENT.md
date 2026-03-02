@@ -50,9 +50,9 @@ heroku addons:create heroku-postgresql:hobby-dev -a lost-found-college
 ```
 This adds free PostgreSQL database
 
-### Step 6: Update app.py for PostgreSQL
+### Step 6: Update application code for PostgreSQL (e.g. run.py or app/db.py)
 
-Add to `app.py` after imports:
+Add to your application initialization (e.g. in `app/db.py` or `run.py`) after imports:
 
 ```python
 import psycopg2
@@ -90,7 +90,7 @@ psycopg2-binary>=2.9.0
 
 Create file: `Procfile` (no extension)
 ```
-web: gunicorn app:app
+web: gunicorn run:app
 ```
 
 ### Step 9: Deploy to Heroku
@@ -106,8 +106,10 @@ git push heroku main
 ```bash
 heroku run python -a lost-found-college
 # In Python shell:
-# from app import init_db, app
+# from run import app
+# from app.db import init_db
 # with app.app_context():
+#     from app.db import init_db
 #     init_db()
 # exit()
 ```
@@ -181,7 +183,7 @@ Add to `requirements.txt`:
 Flask-Mail>=0.9.1
 ```
 
-Add to app.py:
+Add to application code (e.g. run.py):
 ```python
 from flask_mail import Mail, Message
 
@@ -336,7 +338,7 @@ Staff only: admin@lost-and-found.edu
 
 ```bash
 # 1. Test everything locally
-python app.py
+python run.py
 # Visit http://localhost:5000
 
 # 2. Push to GitHub

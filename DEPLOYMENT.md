@@ -34,7 +34,7 @@ python -c "import secrets; print(secrets.token_hex(32))"
 
 ### Step 3: Initialize Database
 ```bash
-python app.py
+python run.py
 ```
 This will create the SQLite database and tables. Stop the app after initialization.
 
@@ -42,12 +42,12 @@ This will create the SQLite database and tables. Stop the app after initializati
 
 **Single process (small deployments):**
 ```bash
-gunicorn --workers 1 --bind 0.0.0.0:5000 app:app
+gunicorn --workers 1 --bind 0.0.0.0:5000 run:app
 ```
 
 **Multiple processes (recommended for production):**
 ```bash
-gunicorn --workers 4 --worker-class sync --bind 0.0.0.0:5000 app:app
+gunicorn --workers 4 --worker-class sync --bind 0.0.0.0:5000 run:app
 ```
 
 **With logging:**
@@ -76,7 +76,7 @@ User=www-data
 WorkingDirectory=/path/to/lost-and-found
 Environment="PATH=/path/to/venv/bin"
 EnvironmentFile=/path/to/lost-and-found/.env
-ExecStart=/path/to/venv/bin/gunicorn --workers 4 --bind 0.0.0.0:5000 app:app
+ExecStart=/path/to/venv/bin/gunicorn --workers 4 --bind 0.0.0.0:5000 run:app
 Restart=always
 RestartSec=10
 
@@ -161,7 +161,7 @@ To migrate from SQLite to PostgreSQL:
 pip install psycopg2-binary
 ```
 
-2. Update connection in app.py (future enhancement)
+2. Update connection in run.py (future enhancement)
 3. Use a migration tool like Alembic
 4. Backup SQLite data before migration
 
