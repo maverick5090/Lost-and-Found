@@ -35,6 +35,11 @@ def create_app():
     return app
 
 
+# expose app at package level for WSGI servers (e.g. gunicorn app:app)
+# this is optional but provides a fallback if run.py is not used.
+app = create_app()
+
+
 def _init_scheduler(app):
     """Internal helper to start the background cleanup job."""
     # import routes here to avoid circular import at module load time
