@@ -1,53 +1,174 @@
-# Campus Lost & Found (Simple Flask Demo)
+🧳 Campus Lost & Found
 
-This is a beginner-friendly, hackathon-ready Campus Lost &amp; Found web app.
+A simple and practical Lost & Found web application built for college campuses.
+Students can report lost or found items, and an admin can review and approve listings before they are publicly visible.
 
-It uses:
+🔗 Live Demo:
+https://lost-and-found-crgt.onrender.com/
 
-- Python Flask
-- SQLite
-- Plain HTML, CSS, and a tiny bit of JavaScript
+⚠️ Note: The first load may take 30–60 seconds because the app is hosted on a free Render instance that sleeps during inactivity.
 
-## Features
+🎯 Problem Statement
 
-- Home page with navigation
-- Report Lost / Found item form
-- Public list of approved found items
-- Simple admin dashboard (no login)
-- Basic JSON APIs for items
+In college campuses, lost items are usually reported via informal WhatsApp groups or word of mouth, which is inefficient and unorganized.
+This project provides a centralized digital platform where students can report and discover lost or found items in a structured way.
 
-## Quick Start
+✅ Features
+Student Side
 
-1. Create and activate a virtual environment (recommended).
-2. Install dependencies:
+View approved lost & found items
 
-```bash
+Report a lost or found item using a simple form
+
+No login required (kept simple for accessibility)
+
+Admin Side
+
+Admin-only approval workflow
+
+Approve or reject reported items
+
+Control what appears publicly
+
+🛠️ Tech Stack
+
+Frontend
+
+HTML
+
+CSS
+
+JavaScript
+
+Jinja2 Templates
+
+Backend
+
+Python
+
+Flask (Application Factory Pattern)
+
+Database
+
+SQLite (database.db)
+
+Automatic schema initialization
+
+Deployment
+
+Render
+
+Gunicorn (WSGI server)
+
+🧱 Project Structure
+Lost-and-Found/
+├── app/
+│   ├── __init__.py        # create_app() and app setup
+│   ├── routes.py          # Flask routes (Blueprint)
+│   ├── models.py          # DB query logic
+│   ├── db.py              # SQLite connection & init_db()
+│   ├── templates/         # HTML templates
+│   └── static/            # CSS, JS, uploads
+│
+├── database.db            # SQLite database
+├── run.py                 # Gunicorn entry point
+├── requirements.txt
+└── README.md
+⚙️ How the App Works (High Level)
+
+Flask app starts using an application factory (create_app)
+
+Database schema is initialized automatically using:
+
+CREATE TABLE IF NOT EXISTS
+
+Users submit lost/found items
+
+Items remain hidden until approved by admin
+
+Approved items appear on the public homepage
+
+This approach makes the app portable across environments without manual database setup.
+
+🧪 Database Initialization (Important)
+
+The database schema is created automatically on startup:
+
+No manual SQL execution required
+
+Safe to run multiple times
+
+Prevents no such table errors on deployment
+
+This is handled inside the app factory using app.app_context().
+
+🚀 Running Locally
+1️⃣ Clone the repository
+git clone https://github.com/maverick5090/Lost-and-Found.git
+cd Lost-and-Found
+2️⃣ Install dependencies
 pip install -r requirements.txt
-```
-
-3. Start the server:
-
-```bash
-# development
+3️⃣ Run the app
 python run.py
-# or with gunicorn (recommended for production)
-gunicorn run:app
-```
 
-4. Browse the site:
+The app will be available at:
 
-- Main page: `http://127.0.0.1:5000/`
-- Admin dashboard: `http://127.0.0.1:5000/admin`
+http://127.0.0.1:5000
+☁️ Deployment Notes (Render)
 
-## API Endpoints
+Hosted on Render Free Tier
 
-- `POST /item` – submit lost or found item
-- `GET /items` – list all items (approved &amp; pending)
-- `GET /admin/items` – list all items (same as `/items`, for admin tools)
-- `POST /admin/approve/<id>` – approve an item
-- `POST /admin/return/<id>` – mark an item as returned
+App may take time to wake up after inactivity
 
-The database file `database.db` is created automatically on first run.
+SQLite data may reset on redeploy or instance restart
 
-app.run(host="0.0.0.0", debug=True)
+For production use, SQLite can be replaced with PostgreSQL for persistent storage.
 
+🔐 Admin Access
+
+Admin approval logic is implemented on the backend
+
+Authentication is intentionally kept simple for college demo use
+
+Can be extended with proper login/auth in future versions
+
+📌 Limitations
+
+No user authentication (by design)
+
+SQLite is not suitable for high-scale production
+
+Free hosting causes cold-start delays
+
+📈 Future Improvements
+
+User authentication (student login)
+
+Persistent database (PostgreSQL)
+
+Image uploads with moderation
+
+Search and category filters
+
+Email or notification system
+
+🎓 Academic Note
+
+This project is built as a college-level full-stack web application to demonstrate:
+
+Backend development with Flask
+
+Proper deployment practices
+
+Debugging real production issues
+
+Clean project structure
+
+👤 Author
+
+Devesh Agre
+B.Tech CSE Student
+
+📜 License
+
+This project is for educational purposes.
