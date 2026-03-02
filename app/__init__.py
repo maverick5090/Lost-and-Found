@@ -2,6 +2,7 @@
 import logging
 from flask import Flask
 from .config import Config
+from .db import init_db
 
 # configure logging once
 logging.basicConfig(
@@ -23,6 +24,10 @@ def create_app():
     # register blueprint containing all routes
     from . import routes  # imported here to avoid circular imports
     app.register_blueprint(routes.bp)
+
+    # initialize database schema
+    with app.app_context():
+        init_db()
 
     return app
 
