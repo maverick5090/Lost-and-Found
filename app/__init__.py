@@ -2,9 +2,7 @@
 import logging
 from flask import Flask
 from .config import Config
-from .db import init_db
 
-# configure logging once
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -13,24 +11,22 @@ logger = logging.getLogger(__name__)
 
 
 def create_app():
-    """Application factory for the Lost-and-Found app."""
     app = Flask(__name__, template_folder="templates", static_folder="static")
     app.config.from_object(Config)
 
-    # ensure upload directory exists early (configuration only)
+    # PostgreSQL (Supabase) config from Render env vars
+    app.config["DB_HOST"] = os.getenv("DB_HOST")
+    app.config["DB_USER"] = os.getenv("DB_USER")
+    app.config["DB_PASSWORD"] = os.getenv("DB_PASSWORD")
+    app.config["DB_NAME"] = os.getenv("DB_NAME")
+    app.config["DB_PORT"] = int(os.getenv("DB_PORT", 5432))
+
+    # Upload folder
     os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
     logger.info(f"Upload folder configured: {app.config['UPLOAD_FOLDER']}")
 
-    # register blueprint containing all routes
-    from . import routes  # imported here to avoid circular imports
-    app.register_blueprint(routes.bp)
-
-    # initialize database schema
-    with app.app_context():
-        init_db()
+    # Register routes
+    from .routes import main
+    app.register_blueprint(main)
 
     return app
-
-
-# expose a module-level app for gunicorn run:app
-app = create_app()
