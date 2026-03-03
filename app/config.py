@@ -16,3 +16,7 @@ class Config:
     MAX_CONTENT_LENGTH = 10 * 1024 * 1024  # 10MB
 
     DEBUG = os.environ.get("FLASK_ENV") == "development"
+
+    DB_SSLMODE = os.environ.get("DB_SSLMODE", "require")
+    DB_CONNECT_TIMEOUT = int(os.environ.get("DB_CONNECT_TIMEOUT", 10))
+    DB_STATEMENT_TIMEOUT_MS = int(os.environ.get("DB_STATEMENT_TIMEOUT_MS", 10000))

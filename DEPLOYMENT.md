@@ -36,7 +36,7 @@ python -c "import secrets; print(secrets.token_hex(32))"
 ```bash
 python run.py
 ```
-This will create the SQLite database and tables. Stop the app after initialization.
+This validates application startup and initializes PostgreSQL schema via `init_db` if needed.
 
 ### Step 4: Deploy with Gunicorn
 
@@ -143,7 +143,7 @@ sudo certbot --nginx -d your-domain.com
 - Logging for monitoring
 
 ✅ **RECOMMENDED ADDITIONS:**
-- Use PostgreSQL instead of SQLite for production
+- Use PostgreSQL with SSL for production
 - Store images on cloud storage (AWS S3, Google Cloud)
 - Enable CORS only for trusted domains
 - Add rate limiting on endpoints
@@ -154,16 +154,16 @@ sudo certbot --nginx -d your-domain.com
 
 ### Database Upgrade Path
 
-To migrate from SQLite to PostgreSQL:
+PostgreSQL hardening checklist:
 
 1. Install PostgreSQL dependencies:
 ```bash
 pip install psycopg2-binary
 ```
 
-2. Update connection in run.py (future enhancement)
+2. Ensure `app/db.py` sets `sslmode=require`, `connect_timeout`, and `statement_timeout`
 3. Use a migration tool like Alembic
-4. Backup SQLite data before migration
+4. Enable regular PostgreSQL backups
 
 ### Monitoring
 
@@ -204,3 +204,4 @@ The application automatically:
 ---
 
 **Last Updated:** February 27, 2026
+

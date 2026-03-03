@@ -15,7 +15,10 @@ def get_db_connection():
         password=current_app.config["DB_PASSWORD"],
         dbname=current_app.config["DB_NAME"],
         port=current_app.config["DB_PORT"],
+        sslmode=current_app.config["DB_SSLMODE"],
+        connect_timeout=current_app.config["DB_CONNECT_TIMEOUT"],
         cursor_factory=RealDictCursor,
+        options=f"-c statement_timeout={current_app.config['DB_STATEMENT_TIMEOUT_MS']}",
     )
     conn.autocommit = True
     return conn

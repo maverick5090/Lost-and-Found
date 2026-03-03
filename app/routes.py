@@ -16,7 +16,6 @@ from flask import (
 from werkzeug.utils import secure_filename
 
 from . import models
-from .db import get_db_connection
 
 main = Blueprint("main", __name__)
 logger = logging.getLogger(__name__)
@@ -49,30 +48,26 @@ def cleanup_old_images():
         conn_items = models.fetch_all_items()
         now = datetime.now()
         deleted_count = 0
+        items_to_clear = []
         for item in conn_items:
             if item["status"] == "returned" and item["date_returned"]:
                 try:
-                    returned_time = datetime.fromisoformat(item["date_returned"])
+                    returned_value = item["date_returned"]
+                    if isinstance(returned_value, datetime):
+                        returned_time = returned_value
+                    else:
+                        returned_time = datetime.fromisoformat(str(returned_value))
                     time_diff = (now - returned_time).total_seconds()
                     if time_diff >= 86400 and item.get("image"):
                         image_path = os.path.join(current_app.root_path, "static", item["image"])
                         if os.path.exists(image_path):
                             os.remove(image_path)
                             deleted_count += 1
-                        # clear image reference in db
-                        conn = get_db_connection()
-                        cur = conn.cursor()
-                        try:
-                            cur.execute(
-                                "UPDATE items SET image = NULL WHERE id = %s",
-                                (item["id"],),
-                            )
-                            conn.commit()
-                        finally:
-                            cur.close()
-                            conn.close()
-                except (ValueError, OSError) as e:
+                        items_to_clear.append(item["id"])
+                except (TypeError, ValueError, OSError) as e:
                     logger.error(f"Error processing item {item['id']}: {str(e)}")
+        if items_to_clear:
+            models.clear_item_images(items_to_clear)
         if deleted_count > 0:
             logger.info(f"Cleanup: Deleted {deleted_count} old images")
     except Exception as e:

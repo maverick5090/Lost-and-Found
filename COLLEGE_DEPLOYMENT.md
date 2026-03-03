@@ -62,15 +62,13 @@ from psycopg2.extras import RealDictCursor
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
 def get_db_connection():
-    if DATABASE_URL:
-        # PostgreSQL for production
-        conn = psycopg2.connect(DATABASE_URL)
-        conn.row_factory = RealDictCursor
-    else:
-        # SQLite for development
-        import sqlite3
-        conn = sqlite3.connect(DB_PATH)
-        conn.row_factory = sqlite3.Row
+    conn = psycopg2.connect(
+        DATABASE_URL,
+        sslmode="require",
+        connect_timeout=10,
+        cursor_factory=RealDictCursor,
+        options="-c statement_timeout=10000",
+    )
     return conn
 ```
 

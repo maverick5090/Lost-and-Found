@@ -50,9 +50,9 @@ Flask (Application Factory Pattern)
 
 Database
 
-SQLite (database.db)
+PostgreSQL (Supabase/Render compatible)
 
-Automatic schema initialization
+Automatic schema initialization (`init_db`)
 
 Deployment
 
@@ -66,11 +66,10 @@ Lost-and-Found/
 │   ├── __init__.py        # create_app() and app setup
 │   ├── routes.py          # Flask routes (Blueprint)
 │   ├── models.py          # DB query logic
-│   ├── db.py              # SQLite connection & init_db()
+│   ├── db.py              # PostgreSQL connection & init_db()
 │   ├── templates/         # HTML templates
 │   └── static/            # CSS, JS, uploads
 │
-├── database.db            # SQLite database
 ├── run.py                 # Gunicorn entry point
 ├── requirements.txt
 └── README.md
@@ -120,9 +119,7 @@ Hosted on Render Free Tier
 
 App may take time to wake up after inactivity
 
-SQLite data may reset on redeploy or instance restart
-
-For production use, SQLite can be replaced with PostgreSQL for persistent storage.
+Use managed PostgreSQL for persistent storage across deploys and restarts.
 
 🔐 Admin Access
 
@@ -136,7 +133,7 @@ Can be extended with proper login/auth in future versions
 
 No user authentication (by design)
 
-SQLite is not suitable for high-scale production
+Database layer is PostgreSQL-backed for production workloads.
 
 Free hosting causes cold-start delays
 
@@ -144,7 +141,7 @@ Free hosting causes cold-start delays
 
 User authentication (student login)
 
-Persistent database (PostgreSQL)
+Database migrations and backups for PostgreSQL
 
 Image uploads with moderation
 
@@ -172,3 +169,5 @@ B.Tech CSE Student
 📜 License
 
 This project is for educational purposes.
+
+

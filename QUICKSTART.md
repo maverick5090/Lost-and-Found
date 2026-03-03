@@ -63,12 +63,11 @@ Lost-and-Found/
 ├── app/
 │   ├── __init__.py          # create_app() factory
 │   ├── routes.py            # all Flask routes
-│   ├── db.py                # SQLite helper
+│   ├── db.py                # PostgreSQL helper
 │   ├── models.py            # data access functions
 │   ├── config.py            # environment config
 │   ├── templates/           # Jinja HTML files
 │   └── static/              # CSS, JS, images (includes uploads)
-├── database.db              # SQLite database (auto-generated)
 ├── run.py                   # WSGI entry point (exports `app`)
 ├── requirements.txt
 ├── README.md
@@ -107,3 +106,4 @@ Set `FLASK_ENV=production` before deploying to a server.
 ---
 
 For more details, see [DEPLOYMENT.md](DEPLOYMENT.md)
+
