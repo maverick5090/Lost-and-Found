@@ -61,9 +61,16 @@ def cleanup_old_images():
                             deleted_count += 1
                         # clear image reference in db
                         conn = get_db_connection()
-                        conn.execute("UPDATE items SET image = NULL WHERE id = ?", (item["id"],))
-                        conn.commit()
-                        conn.close()
+                        cur = conn.cursor()
+                        try:
+                            cur.execute(
+                                "UPDATE items SET image = NULL WHERE id = %s",
+                                (item["id"],),
+                            )
+                            conn.commit()
+                        finally:
+                            cur.close()
+                            conn.close()
                 except (ValueError, OSError) as e:
                     logger.error(f"Error processing item {item['id']}: {str(e)}")
         if deleted_count > 0:
