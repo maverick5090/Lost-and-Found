@@ -18,7 +18,7 @@ from werkzeug.utils import secure_filename
 from . import models
 from .db import get_db_connection
 
-bp = Blueprint("main", __name__)
+main = Blueprint("main", __name__)
 logger = logging.getLogger(__name__)
 
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
@@ -72,18 +72,18 @@ def cleanup_old_images():
         logger.error(f"Cleanup task failed: {str(e)}")
 
 
-@bp.route("/")
+@main.route("/")
 def home():
     items = models.fetch_public_items()
     return render_template("index.html", items=items)
 
 
-@bp.route("/report")
+@main.route("/report")
 def report():
     return render_template("report.html")
 
 
-@bp.route("/admin/login", methods=["GET", "POST"])
+@main.route("/admin/login", methods=["GET", "POST"])
 def admin_login():
     error = None
     next_url = request.args.get("next") or url_for("main.admin_dashboard")
@@ -98,20 +98,20 @@ def admin_login():
     return render_template("admin_login.html", error=error)
 
 
-@bp.route("/admin/logout", methods=["POST"])
+@main.route("/admin/logout", methods=["POST"])
 def admin_logout():
     session.pop("is_admin", None)
     return redirect(url_for("main.home"))
 
 
-@bp.route("/admin")
+@main.route("/admin")
 @admin_login_required
 def admin_dashboard():
     items = models.fetch_all_items()
     return render_template("admin.html", items=items)
 
 
-@bp.route("/item", methods=["POST"])
+@main.route("/item", methods=["POST"])
 def create_item():
     try:
         item_type = request.form.get("type", "").strip()
@@ -160,7 +160,7 @@ def create_item():
         return "An error occurred", 500
 
 
-@bp.route("/items")
+@main.route("/items")
 def list_items_api():
     items = models.fetch_public_items()
     data = [
@@ -180,7 +180,7 @@ def list_items_api():
     return jsonify(data)
 
 
-@bp.route("/admin/items")
+@main.route("/admin/items")
 @admin_login_required
 def admin_items_api():
     items = models.fetch_all_items()
@@ -201,14 +201,14 @@ def admin_items_api():
     return jsonify(data)
 
 
-@bp.route("/admin/approve/<int:item_id>", methods=["POST"])
+@main.route("/admin/approve/<int:item_id>", methods=["POST"])
 @admin_login_required
 def approve_item(item_id):
     models.update_approve(item_id)
     return redirect(url_for("main.admin_dashboard"))
 
 
-@bp.route("/admin/return/<int:item_id>", methods=["POST"])
+@main.route("/admin/return/<int:item_id>", methods=["POST"])
 @admin_login_required
 def return_item(item_id):
     models.update_return(item_id)
