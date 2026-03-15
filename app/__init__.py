@@ -2,6 +2,7 @@
 import logging
 from flask import Flask
 from .config import Config
+from .db import init_db
 
 logging.basicConfig(
     level=logging.INFO,
@@ -28,5 +29,14 @@ def create_app():
     # Register routes
     from .routes import main
     app.register_blueprint(main)
+
+    # Do not fail the whole web process if the external database is slow or
+    # temporarily unavailable during boot.
+    with app.app_context():
+        try:
+            init_db()
+            logger.info("Database schema check completed")
+        except Exception:
+            logger.exception("Database initialization failed during startup")
 
     return app

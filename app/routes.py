@@ -23,6 +23,20 @@ logger = logging.getLogger(__name__)
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
 
 
+def serialize_item(row):
+    return {
+        "id": row["id"],
+        "type": row["type"],
+        "name": row["name"],
+        "description": row["description"],
+        "location": row["location"],
+        "contact": row["contact"],
+        "status": row["status"],
+        "approved": bool(row["approved"]),
+        "image": row["image"] if "image" in row.keys() and row["image"] else None,
+    }
+
+
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -76,13 +90,22 @@ def cleanup_old_images():
 
 @main.route("/")
 def home():
-    items = models.fetch_public_items()
+    try:
+        items = models.fetch_public_items()
+    except Exception:
+        logger.exception("Failed to load public items")
+        items = []
     return render_template("index.html", items=items)
 
 
 @main.route("/report")
 def report():
     return render_template("report.html")
+
+
+@main.route("/health")
+def health():
+    return jsonify({"status": "ok"}), 200
 
 
 @main.route("/admin/login", methods=["GET", "POST"])
@@ -109,7 +132,11 @@ def admin_logout():
 @main.route("/admin")
 @admin_login_required
 def admin_dashboard():
-    items = models.fetch_all_items()
+    try:
+        items = models.fetch_all_items()
+    except Exception:
+        logger.exception("Failed to load admin dashboard items")
+        items = []
     return render_template("admin.html", items=items)
 
 
@@ -164,43 +191,25 @@ def create_item():
 
 @main.route("/items")
 def list_items_api():
-    items = models.fetch_public_items()
-    data = [
-        {
-            "id": row["id"],
-            "type": row["type"],
-            "name": row["name"],
-            "description": row["description"],
-            "location": row["location"],
-            "contact": row["contact"],
-            "status": row["status"],
-            "approved": bool(row["approved"]),
-            "image": row["image"] if "image" in row.keys() and row["image"] else None,
-        }
-        for row in items
-    ]
-    return jsonify(data)
+    try:
+        items = models.fetch_public_items()
+    except Exception:
+        logger.exception("Failed to load public items API")
+        return jsonify({"error": "database_unavailable"}), 503
+
+    return jsonify([serialize_item(row) for row in items])
 
 
 @main.route("/admin/items")
 @admin_login_required
 def admin_items_api():
-    items = models.fetch_all_items()
-    data = [
-        {
-            "id": row["id"],
-            "type": row["type"],
-            "name": row["name"],
-            "description": row["description"],
-            "location": row["location"],
-            "contact": row["contact"],
-            "status": row["status"],
-            "approved": bool(row["approved"]),
-            "image": row["image"] if "image" in row.keys() and row["image"] else None,
-        }
-        for row in items
-    ]
-    return jsonify(data)
+    try:
+        items = models.fetch_all_items()
+    except Exception:
+        logger.exception("Failed to load admin items API")
+        return jsonify({"error": "database_unavailable"}), 503
+
+    return jsonify([serialize_item(row) for row in items])
 
 
 @main.route("/admin/approve/<int:item_id>", methods=["POST"])
