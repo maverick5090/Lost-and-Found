@@ -1,173 +1,191 @@
-🧳 Campus Lost & Found
+# 🧳 Campus Lost & Found
 
-A simple and practical Lost & Found web application built for college campuses.
-Students can report lost or found items, and an admin can review and approve listings before they are publicly visible.
+A centralized Lost & Found platform designed for college campuses.
+Students can report lost or found items, while an admin reviews and approves submissions before they are publicly visible.
 
-🔗 Live Demo:
+🔗 **Live Demo**
 https://lost-and-found-crgt.onrender.com/
 
-⚠️ Note: The first load may take 30–60 seconds because the app is hosted on a free Render instance that sleeps during inactivity.
+> ⚠️ Note: The app may take 30–60 seconds to load initially due to free-tier hosting on Render.
 
-🎯 Problem Statement
+---
 
-In college campuses, lost items are usually reported via informal WhatsApp groups or word of mouth, which is inefficient and unorganized.
-This project provides a centralized digital platform where students can report and discover lost or found items in a structured way.
+## 🎯 Problem
 
-✅ Features
-Student Side
+Lost items on campuses are typically handled through WhatsApp groups or word of mouth — which is unstructured, unreliable, and inefficient.
 
-View approved lost & found items
+This project solves that by providing:
 
-Report a lost or found item using a simple form
+* A single, organized platform
+* Structured item reporting
+* Admin-controlled visibility
 
-No login required (kept simple for accessibility)
+---
 
-Admin Side
+## ⚙️ Key Features
 
-Admin-only approval workflow
+### 👨‍🎓 Student Side
 
-Approve or reject reported items
+* View all approved lost & found items
+* Submit a lost or found report via a simple form
+* No login required (fast and accessible)
 
-Control what appears publicly
+### 🛠️ Admin Side
 
-🛠️ Tech Stack
+* Review submitted items
+* Approve or reject listings
+* Control what appears publicly
 
-Frontend
+---
 
-HTML
+## 🧠 How It Works
 
-CSS
+* Users submit items through a form
+* Items are stored in the database but remain hidden
+* Admin reviews submissions
+* Approved items are displayed on the public homepage
 
-JavaScript
+---
 
-Jinja2 Templates
+## 🏗️ Tech Stack
 
-Backend
+### Frontend
 
-Python
+* HTML
+* CSS
+* JavaScript
+* Jinja2 (templating)
 
-Flask (Application Factory Pattern)
+### Backend
 
-Database
+* Python
+* Flask (Application Factory Pattern)
 
-PostgreSQL (Supabase/Render compatible)
+### Database
 
-Automatic schema initialization (`init_db`)
+* PostgreSQL (Render / Supabase compatible)
 
-Deployment
+### Deployment
 
-Render
+* Render (Free Tier)
+* Gunicorn (WSGI server)
 
-Gunicorn (WSGI server)
+---
 
-🧱 Project Structure
+## 🧱 Project Structure
+
+```
 Lost-and-Found/
-├── app/
-│   ├── __init__.py        # create_app() and app setup
-│   ├── routes.py          # Flask routes (Blueprint)
-│   ├── models.py          # DB query logic
-│   ├── db.py              # PostgreSQL connection & init_db()
-│   ├── templates/         # HTML templates
-│   └── static/            # CSS, JS, uploads
 │
-├── run.py                 # Gunicorn entry point
+├── app/
+│   ├── __init__.py      # App factory (create_app)
+│   ├── routes.py        # Application routes
+│   ├── models.py        # Database logic
+│   ├── db.py            # PostgreSQL connection + init
+│   ├── templates/       # HTML templates
+│   └── static/          # CSS, JS, uploads
+│
+├── run.py               # Entry point (Gunicorn)
 ├── requirements.txt
 └── README.md
-⚙️ How the App Works (High Level)
+```
 
-Flask app starts using an application factory (create_app)
+---
 
-Database schema is initialized automatically using:
+## 🧪 Database Initialization
 
-CREATE TABLE IF NOT EXISTS
+The database schema is automatically created on startup using:
 
-Users submit lost/found items
+* `CREATE TABLE IF NOT EXISTS`
 
-Items remain hidden until approved by admin
+### Why this matters:
 
-Approved items appear on the public homepage
+* No manual SQL setup required
+* Safe across deployments
+* Prevents missing table errors
 
-This approach makes the app portable across environments without manual database setup.
+---
 
-🧪 Database Initialization (Important)
+## 🚀 Run Locally
 
-The database schema is created automatically on startup:
+### 1. Clone the repo
 
-No manual SQL execution required
-
-Safe to run multiple times
-
-Prevents no such table errors on deployment
-
-This is handled inside the app factory using app.app_context().
-
-🚀 Running Locally
-1️⃣ Clone the repository
+```
 git clone https://github.com/maverick5090/Lost-and-Found.git
 cd Lost-and-Found
-2️⃣ Install dependencies
+```
+
+### 2. Install dependencies
+
+```
 pip install -r requirements.txt
-3️⃣ Run the app
+```
+
+### 3. Run the app
+
+```
 python run.py
+```
 
-The app will be available at:
+Open in browser:
 
+```
 http://127.0.0.1:5000
-☁️ Deployment Notes (Render)
+```
 
-Hosted on Render Free Tier
+---
 
-App may take time to wake up after inactivity
+## ☁️ Deployment
 
-Use managed PostgreSQL for persistent storage across deploys and restarts.
+* Hosted on Render (free tier)
+* Uses PostgreSQL for persistent storage
+* Cold start delay due to inactivity
 
-🔐 Admin Access
+---
 
-Admin approval logic is implemented on the backend
+## 🔐 Admin Access
 
-Authentication is intentionally kept simple for college demo use
+* Admin approval logic is implemented on backend
+* Authentication is minimal (can be extended)
 
-Can be extended with proper login/auth in future versions
+---
 
-📌 Limitations
+## 📉 Limitations
 
-No user authentication (by design)
+* No user authentication
+* No image uploads
+* Cold-start delays (free hosting)
 
-Database layer is PostgreSQL-backed for production workloads.
+---
 
-Free hosting causes cold-start delays
+## 📈 Future Improvements
 
-📈 Future Improvements
+* User authentication system (student login)
+* Image upload + moderation
+* Search and filters (category, keywords)
+* Email/notification system
+* Database migrations
 
-User authentication (student login)
+---
 
-Database migrations and backups for PostgreSQL
+## 🎓 Learning Outcomes
 
-Image uploads with moderation
+This project demonstrates:
 
-Search and category filters
+* Full-stack web development using Flask
+* Real-world deployment (Render + PostgreSQL)
+* Application structuring using factory pattern
+* Debugging production issues
 
-Email or notification system
+---
 
-🎓 Academic Note
+## 👤 Author
 
-This project is built as a college-level full-stack web application to demonstrate:
+**Devesh Agre**
+B.Tech Computer Science Engineering
 
-Backend development with Flask
+---
 
-Proper deployment practices
+## 📜 License
 
-Debugging real production issues
-
-Clean project structure
-
-👤 Author
-
-Devesh Agre
-B.Tech CSE Student
-
-📜 License
-
-This project is for educational purposes.
-
-
+This project is built for educational purposes.
